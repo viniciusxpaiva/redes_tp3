@@ -8,5 +8,5 @@ server:
 	gcc ser_teste.o -o servidor
 	./servidor
 executa:
-	./executavel 
+	./executavel 127.0.0.1
 

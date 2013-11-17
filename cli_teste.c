@@ -28,9 +28,9 @@ int main(int argc, char** argv)
     int sockfd, i, slen=sizeof(serv_addr);
     char buf[BUFLEN];
 
-     printf("\nEnter data to send(Type exit and press enter to exit) : ");
-        scanf("%[^\n]",buf);
-        getchar();
+     //printf("\nEnter data to send(Type exit and press enter to exit) : ");
+        //scanf("%[^\n]",buf);
+        //getchar();
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1)
         err("socket");
  
@@ -43,8 +43,10 @@ int main(int argc, char** argv)
         exit(1);
     }
  
-        if (sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen)==-1)
+        //if (sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen)==-1)
+        if (sendto(sockfd, argv[1], strlen(argv[1]), 0, (struct sockaddr*)&serv_addr, slen)==-1)
             err("sendto()");
+        printf("%s\n", argv[1]);
  
     close(sockfd);
     return 0;
