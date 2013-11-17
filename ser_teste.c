@@ -13,7 +13,7 @@
 #include <stdlib.h> 
 #include <string.h>
 #define BUFLEN 512
-#define PORT 9930
+// #define PORT 9930
  
 void err(char *str)
 {
@@ -21,13 +21,15 @@ void err(char *str)
     exit(1);
 }
  
-int main(void)
+int main(int argc, char **argv)
 {
     struct sockaddr_in my_addr, cli_addr;
     int sockfd, i; 
-    socklen_t slen=sizeof(cli_addr);
+    socklen_t slen = sizeof(cli_addr);
     char buf[BUFLEN];
- 
+    char buf2[BUFLEN];
+    int port = atoi(argv[1]);
+
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1)
       err("socket");
     else
@@ -35,7 +37,7 @@ int main(void)
  
     bzero(&my_addr, sizeof(my_addr));
     my_addr.sin_family = AF_INET;
-    my_addr.sin_port = htons(PORT);
+    my_addr.sin_port = htons( port );
     my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
      
     if (bind(sockfd, (struct sockaddr* ) &my_addr, sizeof(my_addr))==-1)
