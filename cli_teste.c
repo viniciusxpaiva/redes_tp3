@@ -55,8 +55,20 @@ int main(int argc, char** argv)
     }*/
     if(strcmp(argv[3], "register") == 0 ){
         
-        sprintf(buf ,"R%s %s",argv[1],argv[4]);
+        if( argv[4] != NULL){
+            sprintf(buf ,"R%s %s",argv[1],argv[4]);
+            getlogin_r( argv[4], strlen( argv[4] ) );
+        }else{
+            name = getlogin();
+            if( name != NULL)
+                printf("Sem usuario %s\n", name);
+            else{
+                printf("Você não digitou um login anteriormente\n");
+                exit(0);
+            }
+        } 
         
+
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
             err("sendto()");
         

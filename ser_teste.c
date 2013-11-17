@@ -29,6 +29,7 @@ int main(int argc, char **argv)
     char buf[BUFLEN];
     char buf2[BUFLEN];
     int port = atoi(argv[1]);
+    int len;
 
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1)
       err("socket");
@@ -47,10 +48,11 @@ int main(int argc, char **argv)
  
     while(1)
     {
-        if (recvfrom(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, &slen)==-1) err("recvfrom()");
+        if ( recvfrom(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, &slen) == -1) err("recvfrom()");
 
-        if( buf[0] == "R" )
+        // if( buf[0] == "R" ){
             printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
+        // }
     }
  
     close(sockfd);
