@@ -13,9 +13,12 @@
 #include <unistd.h>
 #include <stdlib.h> 
 #include <string.h>
+#include "struc_usuario.h"
+
 #define BUFLEN 512
 // #define PORT 9930
 #define _XOPEN_SOURCE 500
+
  
 void err(char *s)
 {
@@ -81,4 +84,6 @@ int main(int argc, char** argv)
  
     close(sockfd);
     return 0;
+
+
 }
