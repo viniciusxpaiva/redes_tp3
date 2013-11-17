@@ -21,13 +21,13 @@ void err(char *str)
     exit(1);
 }
  
-int main(void)
+int main(int argc, int argv)
 {
     struct sockaddr_in my_addr, cli_addr;
     int sockfd, i; 
     socklen_t slen=sizeof(cli_addr);
     char buf[BUFLEN];
- 
+    char buf2[BUFLEN];
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1)
       err("socket");
     else

@@ -2,11 +2,11 @@ all: compila executa
 
 compila:
 	gcc -c cli_teste.c
-	gcc cli_teste.c -o executavel
+	gcc cli_teste.c -o cliente
 server:
 	gcc -c ser_teste.c
 	gcc ser_teste.o -o servidor
-	./servidor
+	./servidor 9930
 executa:
-	./executavel 127.0.0.1
+	./cliente 127.0.0.1 10 register Joseph
 
