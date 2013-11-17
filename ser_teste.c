@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     int port = atoi(argv[1]);
     int len;
 
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1)
+    if ( ( sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) ) == -1)
       err("socket");
     else
       printf("Server : Socket() successful\n");
@@ -50,9 +50,15 @@ int main(int argc, char **argv)
     {
         if ( recvfrom(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, &slen) == -1) err("recvfrom()");
 
-        // if( buf[0] == "R" ){
+        printf("%c\n", buf[0] );
+        if( buf[0] == 'R' ){
             printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
-        // }
+        }else if( buf[0] == 'D' ){
+
+        }else if( buf[0] == 'L' ){
+            
+        }
+
     }
  
     close(sockfd);
