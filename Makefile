@@ -8,5 +8,5 @@ server:
 	gcc ser_teste.o -o servidor
 	./servidor 9930
 executa:
-	./cliente 127.0.0.1 10 register Joseph
+	./cliente 127.0.0.1 9930 register Joseph
 
