@@ -9,4 +9,3 @@ server:
 	./servidor 9930
 executa:
 	./cliente 127.0.0.1 9930 query Joseph
-

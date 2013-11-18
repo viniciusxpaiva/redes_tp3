@@ -54,17 +54,14 @@ int main(int argc, char** argv)
         fprintf(stderr, "inet_aton() failed\n");
         exit(1);
     }
-    /*for(j = 1; j < argc; j++){
-        if (sendto(sockfd, argv[j], BUFLEN, 0, (struct sockaddr*)&serv_addr, slen)==-1)
-            err("sendto()");
-    }*/
+    
     if(strcmp(argv[3], "register") == 0 ){
         
-        if( argv[4] != NULL){
-            sprintf(buf ,"R %s %s",argv[1],argv[4]); 
-        }else{ 
-            sprintf(buf ,"R %s %s",argv[1],getlogin());
-        }        
+        if( argv[4] != NULL)
+            sprintf(buf ,"R %s %s %s",argv[1],argv[1],argv[4]); 
+        else
+            sprintf(buf ,"R %s %s %s",argv[1],argv[1],getlogin());
+        
 
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
             err("sendto()");
@@ -85,11 +82,10 @@ int main(int argc, char** argv)
 
     if(strcmp(argv[3], "query") == 0 ){
         
-        if( argv[4] != NULL){
-            sprintf(buf ,"L %s %s",argv[1],argv[4]); 
-        }else{ 
-            sprintf(buf ,"L %s %s",argv[1],getlogin());
-        }        
+        if( argv[4] != NULL)
+            sprintf(buf ,"L %s %s %s",argv[1],argv[1],argv[4]); 
+        else
+            sprintf(buf ,"L %s %s %s",argv[1],argv[1],getlogin());       
 
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
             err("sendto()");

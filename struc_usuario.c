@@ -17,13 +17,16 @@ struct Tipo_Elemento *iniciaElemento(){
 	return x;
 }
 
-void insereValores( struct Tipo_Elemento *x , char *dns , char *ip ){ 
-	x->idCount++;      
-    strcpy( x->dns[ x->idCount ], dns );      
+void insereValores( struct Tipo_Elemento *x  , char *ip , char *dns){ 
+	x->idCount++;  
+	printf("%d\n", x->idCount );    
+	x->dns[ x->idCount ] = (char*)malloc(sizeof(char) * 500);
+	x->ip[ x->idCount ] = (char*)malloc(sizeof(char) * 500);
+    strcpy( x->dns[ x->idCount ] , dns );      
     strcpy( x->ip[ x->idCount ] , ip );
 }
 //Função que insere um elemento na lista.
-void Insere_Lista(Tipo_Lista *L, char *user , char *dns , char *ip){
+void Insere_Lista(Tipo_Lista *L,char *ip ,  char *dns ,  char *user){
 	struct Tipo_Elemento *x;	
 	x = iniciaElemento();
 
@@ -39,8 +42,7 @@ void Insere_Lista(Tipo_Lista *L, char *user , char *dns , char *ip){
 		L->inicio=x; 
 	}
 	x->anterior = NULL;       
-
-	// printf("%d\n", x->idCount );
+ 
 	strcpy( x->user , user );      
     strcpy( x->dns[ x->idCount ], dns );      
     strcpy( x->ip[ x->idCount ] , ip );
@@ -54,8 +56,8 @@ void Insere_Lista(Tipo_Lista *L, char *user , char *dns , char *ip){
 struct Tipo_Elemento *Busca_Elemento(Tipo_Lista *L, char *alvo){
     struct Tipo_Elemento *aux;     
     aux = L->inicio;
+    
     while (aux != NULL){    
-    	printf("%s\n", aux->user );
         if ( strcmp( alvo , aux->user) == 0 )     //ou no caso onde o elemento não esteja na lista.
 			return (aux);
 		aux = aux->proximo;   

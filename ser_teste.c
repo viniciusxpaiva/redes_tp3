@@ -13,6 +13,7 @@
 #include <stdlib.h> 
 #include <string.h>
 #include "struc_usuario.h"
+#include "utils.c"
 #define BUFLEN 512 
  
 void err(char *str)
@@ -33,6 +34,8 @@ int main(int argc, char **argv)
     Tipo_Lista *usuariosAtivos;
     struct Tipo_Elemento *aux;
     usuariosAtivos = Lista_Vazia();   
+    usuariosAtivos = Lista_Vazia();    
+    char **dados;
 
     if ( ( sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) ) == -1)
       err("socket");
@@ -53,22 +56,52 @@ int main(int argc, char **argv)
     {
         if ( recvfrom(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, &slen) == -1) err("recvfrom()");
 
-        printf("%c\n", buf[0] );
         if( buf[0] == 'R' ){
+            
             printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
-            char *tok = strtok(buf, " ");
-            times = 0;
-            while (tok) {
-                printf("Token: %s\n", tok);
-                tok = strtok(NULL, " ");
+            char *dados[5];
+            char *result = NULL;
+            int count = 0;
+            result = strtok(buf, " ");
+            while (result != NULL) {  
+                dados[count] = result;
+                result = strtok(NULL," ");
+                count++;
             }
+
+            aux = Busca_Elemento( usuariosAtivos , dados[3] );
+            printf("##########%s\n", dados[3]);
+            if( aux == NULL){ 
+                Insere_Lista(usuariosAtivos , inet_ntoa(cli_addr.sin_addr) , dados[2] , dados[3]);
+
+            }else{ 
+
+                insereValores(aux , inet_ntoa(cli_addr.sin_addr) , dados[2] );
+                printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );
+            }
+
+            Imprime_Lista(usuariosAtivos);
+
         }else if( buf[0] == 'D' ){
 
         }else if( buf[0] == 'L' ){
-            //aux = Busca_Elemento(usuariosAtivos, );
-            
-
-            if (sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
+            //printf("%s\n", buf);
+            char *dados[5];
+            char *result = NULL;
+            int count = 0;
+            result = strtok(buf, " ");
+            while (result != NULL) {  
+                dados[count] = result;
+                result = strtok(NULL," ");
+                count++;
+            }
+            aux = Busca_Elemento(usuariosAtivos , dados[3] );          
+            if(aux == NULL){
+                printf("Usuario nao tem registro de log\n");
+                if (sendto(sockfd, "Usuario sem registro de log", BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1)
+                err("sendto()");
+            } 
+            else if (sendto(sockfd, aux->ip[aux->idCount], BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
                 err("sendto()");
             //if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
                 //err("sendto()");
