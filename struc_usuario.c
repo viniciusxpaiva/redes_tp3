@@ -17,7 +17,7 @@ struct Tipo_Elemento *iniciaElemento(){
 	return x;
 }
 
-void insereValores( Tipo_Elemento *x , char *dns , char *ip ){ 
+void insereValores( struct Tipo_Elemento *x , char *dns , char *ip ){ 
 	x->idCount++;      
     strcpy( x->dns[ x->idCount ], dns );      
     strcpy( x->ip[ x->idCount ] , ip );

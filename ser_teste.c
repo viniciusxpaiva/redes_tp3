@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     char buf[BUFLEN];
     char buf2[BUFLEN];
     int port = atoi(argv[1]);
-    int len;
+    int times;
     Tipo_Lista *usuariosAtivos;
     struct Tipo_Elemento *aux;
     usuariosAtivos = Lista_Vazia();    
@@ -57,6 +57,7 @@ int main(int argc, char **argv)
         if( buf[0] == 'R' ){
             printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
             char *tok = strtok(buf, " ");
+            times = 0;
             while (tok) {
                 printf("Token: %s\n", tok);
                 tok = strtok(NULL, " ");
