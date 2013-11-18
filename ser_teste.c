@@ -9,13 +9,15 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netdb.h>   
 #include <unistd.h>
 #include <stdlib.h> 
 #include <string.h>
 #include "struc_usuario.h"
 #include "utils.c"
 #define BUFLEN 512 
- 
+#define NI_MAXHOST 1025
+#define NI_MAXSERV 32
 void err(char *str)
 {
     perror(str);
@@ -73,13 +75,14 @@ int main(int argc, char **argv)
                 Insere_Lista(usuariosAtivos , inet_ntoa(cli_addr.sin_addr) , dados[2] , dados[3]);
 
             }else{ 
-
-                insereValores(aux , inet_ntoa(cli_addr.sin_addr) , dados[2] );
-                printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );
+                char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV]; 
+                if (getnameinfo((struct sockaddr*)&cli_addr, sizeof(cli_addr) , hbuf, sizeof(hbuf), sbuf,sizeof(sbuf),0) == 0){
+                    insereValores(aux , inet_ntoa(cli_addr.sin_addr) , hbuf );
+                    printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );    
+                }                
             }
 
-            Imprime_Lista(usuariosAtivos);
-
+            Imprime_Lista(usuariosAtivos); 
         }else if( buf[0] == 'D' ){
 
         }else if( buf[0] == 'L' ){
