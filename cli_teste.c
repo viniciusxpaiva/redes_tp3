@@ -59,9 +59,9 @@ int main(int argc, char** argv)
     if(strcmp(argv[3], "register") == 0 ){
         
         if( argv[4] != NULL){
-            sprintf(buf ,"R %s %s",argv[1],argv[4]); 
+            sprintf(buf ,"R %s %s %s",argv[1],argv[1],argv[4]); 
         }else{ 
-            sprintf(buf ,"R %s %s",argv[1],getlogin());
+            sprintf(buf ,"R %s %s %s",argv[1],argv[1],getlogin());
         }        
 
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
