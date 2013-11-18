@@ -33,7 +33,8 @@ int main(int argc, char** argv)
     char buf[BUFLEN];
     int j, k;
     size_t namesize;
-    char *name; 
+    char *name;
+    char dns[128];
     int port = atoi(argv[2]);
 
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1)
@@ -80,7 +81,8 @@ int main(int argc, char** argv)
         //if (sendto(sockfd, name, namesize, 0, (struct sockaddr*)&serv_addr, slen)==-1)
           //  err("sendto()");
     }
-
+    gethostname(dns, sizeof(dns));
+    printf("%s\n", dns);
  
     close(sockfd);
     return 0;
