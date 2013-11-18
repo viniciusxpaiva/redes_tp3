@@ -25,6 +25,16 @@ void insereValores( struct Tipo_Elemento *x  , char *ip , char *dns){
     strcpy( x->dns[ x->idCount ] , dns );      
     strcpy( x->ip[ x->idCount ] , ip );
 }
+
+
+void eliminaValores( struct Tipo_Elemento *x  , char *ip , char *dns){ 
+  x->idCount--;  
+  printf("%d\n", x->idCount );    
+  x->dns[ x->idCount ] = (char*)malloc(sizeof(char) * 500);
+  x->ip[ x->idCount ] = (char*)malloc(sizeof(char) * 500);
+    strcpy( x->dns[ x->idCount ] , dns );      
+    strcpy( x->ip[ x->idCount ] , ip );
+}
 //Função que insere um elemento na lista.
 void Insere_Lista(Tipo_Lista *L,char *ip ,  char *dns ,  char *user){
 	struct Tipo_Elemento *x;	

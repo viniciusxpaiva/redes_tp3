@@ -1,10 +1,3 @@
-//UDPClient.c
- 
-/*
- * gcc -o client UDPClient.c
- * ./client <server-ip>
- */
- 
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -16,7 +9,6 @@
 #include "struc_usuario.h"
 
 #define BUFLEN 512
-// #define PORT 9930
 #define _XOPEN_SOURCE 500
 
 #define NI_MAXHOST 1025
@@ -75,19 +67,26 @@ int main(int argc, char** argv)
             else
                 sprintf(buf ,"R %s %s %s", inet_ntoa(my.sin_addr) ,hbuf,getlogin());
         } 
-
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
             err("sendto()");
     }
 
 
     if(strcmp(argv[3], "deregister") == 0 ){
-        
-        if( argv[4] != NULL){
-            sprintf(buf ,"D %s %s",argv[1],argv[4]); 
-        }else{ 
-            sprintf(buf ,"D %s %s",argv[1],getlogin());
-        }        
+        connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+
+        if (getsockname(sockfd, (struct sockaddr *)&my, &addressLength) == -1) {
+          perror("getsockname() failed");
+          return -1;
+        } 
+
+        char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV]; 
+        if ( getnameinfo((struct sockaddr*)&my, sizeof(my) , hbuf, sizeof(hbuf), sbuf,sizeof(sbuf),0) == 0){
+            if( argv[4] != NULL)
+                sprintf(buf ,"D %s %s %s", inet_ntoa(my.sin_addr) ,hbuf,argv[4]); 
+            else
+                sprintf(buf ,"D %s %s %s", inet_ntoa(my.sin_addr) ,hbuf,getlogin());
+        } 
 
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
             err("sendto()");
@@ -119,18 +118,6 @@ int main(int argc, char** argv)
                 exit(0);
 
         }
-
-
-        /*if (recvfrom(sockfd, buf2, BUFLEN, 0, (struct sockaddr*)&serv_addr, &slen) == -1) err("recvfrom()");
-            printf("%s\n", buf2);
-        if(strcmp(buf2, "ERRO") == 0)
-            exit(0);
-        if (recvfrom(sockfd, buf2, BUFLEN, 0, (struct sockaddr*)&serv_addr, &slen) == -1) err("recvfrom()");
-            printf("%s\n", buf2);
-        if (recvfrom(sockfd, buf2, BUFLEN, 0, (struct sockaddr*)&serv_addr, &slen) == -1) err("recvfrom()");
-            printf("%s\n", buf2);*/
-
-
     } 
     close(sockfd);
     return 0;

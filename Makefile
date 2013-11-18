@@ -16,3 +16,8 @@ que:
 	gcc -c cli_teste.c
 	gcc cli_teste.c -o cliente
 	./cliente 127.0.0.1 9930 query Joseph
+
+de:
+	gcc -c cli_teste.c
+	gcc cli_teste.c -o cliente
+	./cliente 127.0.0.1 9930 deregister Joseph

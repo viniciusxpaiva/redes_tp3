@@ -55,10 +55,7 @@ int main(int argc, char **argv)
     while(1)
     {
         if ( recvfrom(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, &slen) == -1) err("recvfrom()");
-
         if( buf[0] == 'R' ){
-            
-            // printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
             char *dados[5];
             char *result = NULL;
             int count = 0;
@@ -68,23 +65,42 @@ int main(int argc, char **argv)
                 result = strtok(NULL," ");
                 count++;
             }
-
-            // printf("%s\n%s\n", dados[1] , dados[2]);
             aux = Busca_Elemento( usuariosAtivos , dados[3] );
             if( aux == NULL){ 
                 Insere_Lista(usuariosAtivos , dados[1] , dados[2] , dados[3]);
 
             }else{  
                 insereValores(aux , dados[1] , dados[2] );
-                // printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );    
                                 
             }
 
             Imprime_Lista(usuariosAtivos); 
         }else if( buf[0] == 'D' ){
+            char *dados[5];
+            char *result = NULL;
+            int count = 0;
+            result = strtok(buf, " ");
+            while (result != NULL) {  
+                dados[count] = result;
+                result = strtok(NULL," ");
+                count++;
+            }
+            aux = Busca_Elemento( usuariosAtivos , dados[3] );
+            if(aux == NULL){
+                printf("Usuario nao tem registro de log\n");
+                if (sendto(sockfd, "ERRO", BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1)
+                err("sendto()");
+                continue;
+            }else if (aux->idCount == 1){
+                Elimina_Elemento(usuariosAtivos, aux);
+                if (sendto(sockfd, "Usuario nao possui mais conexoes", BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1)
+                    err("sendto()");
+            }else
+                eliminaValores(aux , dados[1] , dados[2] );
+
+            Imprime_Lista(usuariosAtivos); 
 
         }else if( buf[0] == 'L' ){
-            //printf("%s\n", buf);
             char *dados[5];
             char *result = NULL;
             int count = 0;
@@ -107,15 +123,8 @@ int main(int argc, char **argv)
             else if (sendto(sockfd, aux->dns[aux->idCount], BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
                 err("sendto()");
             char dig = (char)(((int)'0')+aux->idCount);
-            //printf("%s\n", dig);
-
             if (sendto(sockfd, &dig, BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
-                err("sendto()");
-            //if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
-                //err("sendto()");
-            //if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
-                //err("sendto()");
-            
+                err("sendto()");  
         }
 
     }
