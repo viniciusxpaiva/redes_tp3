@@ -59,21 +59,38 @@ int main(int argc, char** argv)
     if(strcmp(argv[3], "register") == 0 ){
         
         if( argv[4] != NULL){
-            sprintf(buf ,"R%s %s",argv[1],argv[4]);
-            // getlogin_r( argv[4], strlen( argv[4] ) );
-        }else{
-            name = getlogin();
-            sprintf(buf ,"R%s %s",argv[1],name);
-        } 
-        
+            sprintf(buf ,"R %s %s",argv[1],argv[4]); 
+        }else{ 
+            sprintf(buf ,"R %s %s",argv[1],getlogin());
+        }        
 
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
             err("sendto()");
+    }
+
+
+    if(strcmp(argv[3], "deregister") == 0 ){
         
-        // if (sendto(sockfd, argv[4], BUFLEN, 0, (struct sockaddr*)&serv_addr, slen)==-1)
-        //     err("sendto()");
-        //if (sendto(sockfd, name, namesize, 0, (struct sockaddr*)&serv_addr, slen)==-1)
-          //  err("sendto()");
+        if( argv[4] != NULL){
+            sprintf(buf ,"D %s %s",argv[1],argv[4]); 
+        }else{ 
+            sprintf(buf ,"D %s %s",argv[1],getlogin());
+        }        
+
+        if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
+            err("sendto()");
+    }  
+
+    if(strcmp(argv[3], "query") == 0 ){
+        
+        if( argv[4] != NULL){
+            sprintf(buf ,"L %s %s",argv[1],argv[4]); 
+        }else{ 
+            sprintf(buf ,"L %s %s",argv[1],getlogin());
+        }        
+
+        if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
+            err("sendto()");
     }
 
  
