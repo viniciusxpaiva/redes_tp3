@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     int len;
     Tipo_Lista *usuariosAtivos;
     struct Tipo_Elemento *aux;
-    usuariosAtivos = Lista_Vazia();
+    usuariosAtivos = Lista_Vazia();    
 
     if ( ( sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) ) == -1)
       err("socket");

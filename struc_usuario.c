@@ -7,7 +7,7 @@ Tipo_Lista *Lista_Vazia(){
 	return L;
 }
 
-struct Tipo_ELemento *iniciaElemento(){
+struct Tipo_Elemento *iniciaElemento(){
 	struct Tipo_Elemento *x;	
 	x = ( struct Tipo_Elemento *) malloc ( sizeof (struct Tipo_Elemento) );
 	x->idCount = 1; 
@@ -15,6 +15,12 @@ struct Tipo_ELemento *iniciaElemento(){
 	x->dns[ x->idCount ] = (char*)malloc(sizeof(char) * 500);
 	x->ip[ x->idCount ] = (char*)malloc(sizeof(char) * 500);
 	return x;
+}
+
+void insereValores( Tipo_Elemento *x , char *dns , char *ip ){ 
+	x->idCount++;      
+    strcpy( x->dns[ x->idCount ], dns );      
+    strcpy( x->ip[ x->idCount ] , ip );
 }
 //Função que insere um elemento na lista.
 void Insere_Lista(Tipo_Lista *L, char *user , char *dns , char *ip){
