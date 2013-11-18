@@ -16,8 +16,6 @@
 #include "struc_usuario.h"
 #include "utils.c"
 #define BUFLEN 512 
-#define NI_MAXHOST 1025
-#define NI_MAXSERV 32
 void err(char *str)
 {
     perror(str);
@@ -59,7 +57,7 @@ int main(int argc, char **argv)
 
         if( buf[0] == 'R' ){
             
-            printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
+            // printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
             char *dados[5];
             char *result = NULL;
             int count = 0;
@@ -70,16 +68,15 @@ int main(int argc, char **argv)
                 count++;
             }
 
+            // printf("%s\n%s\n", dados[1] , dados[2]);
             aux = Busca_Elemento( usuariosAtivos , dados[3] );
             if( aux == NULL){ 
-                Insere_Lista(usuariosAtivos , inet_ntoa(cli_addr.sin_addr) , dados[2] , dados[3]);
+                Insere_Lista(usuariosAtivos , dados[1] , dados[2] , dados[3]);
 
-            }else{ 
-                char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV]; 
-                if (getnameinfo((struct sockaddr*)&cli_addr, sizeof(cli_addr) , hbuf, sizeof(hbuf), sbuf,sizeof(sbuf),0) == 0){
-                    insereValores(aux , inet_ntoa(cli_addr.sin_addr) , hbuf );
-                    printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );    
-                }                
+            }else{  
+                insereValores(aux , dados[1] , dados[2] );
+                // printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );    
+                                
             }
 
             Imprime_Lista(usuariosAtivos); 
