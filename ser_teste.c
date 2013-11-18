@@ -13,8 +13,7 @@
 #include <stdlib.h> 
 #include <string.h>
 #include "struc_usuario.h"
-#define BUFLEN 512
-// #define PORT 9930
+#define BUFLEN 512 
  
 void err(char *str)
 {
@@ -30,9 +29,12 @@ int main(int argc, char **argv)
     char buf[BUFLEN];
     char buf2[BUFLEN];
     int port = atoi(argv[1]);
-    int len;
+    int times;
+    Tipo_Lista *usuariosAtivos;
+    struct Tipo_Elemento *aux;
+    usuariosAtivos = Lista_Vazia();   
 
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1)
+    if ( ( sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) ) == -1)
       err("socket");
     else
       printf("Server : Socket() successful\n");
@@ -51,9 +53,30 @@ int main(int argc, char **argv)
     {
         if ( recvfrom(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, &slen) == -1) err("recvfrom()");
 
-        // if( buf[0] == "R" ){
+        printf("%c\n", buf[0] );
+        if( buf[0] == 'R' ){
             printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
-        // }
+            char *tok = strtok(buf, " ");
+            times = 0;
+            while (tok) {
+                printf("Token: %s\n", tok);
+                tok = strtok(NULL, " ");
+            }
+        }else if( buf[0] == 'D' ){
+
+        }else if( buf[0] == 'L' ){
+            //aux = Busca_Elemento(usuariosAtivos, );
+            
+
+            if (sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
+                err("sendto()");
+            //if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
+                //err("sendto()");
+            //if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
+                //err("sendto()");
+            
+        }
+
     }
  
     close(sockfd);

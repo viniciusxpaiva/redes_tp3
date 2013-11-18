@@ -31,6 +31,7 @@ int main(int argc, char** argv)
     struct sockaddr_in serv_addr;
     int sockfd, i, slen=sizeof(serv_addr);
     char buf[BUFLEN];
+    char buf2[BUFLEN];
     int j, k;
     size_t namesize;
     char *name;
@@ -60,30 +61,44 @@ int main(int argc, char** argv)
     if(strcmp(argv[3], "register") == 0 ){
         
         if( argv[4] != NULL){
-            sprintf(buf ,"R%s %s",argv[1],argv[4]);
-            getlogin_r( argv[4], strlen( argv[4] ) );
-        }else{
-            name = getlogin();
-            if( name != NULL)
-                printf("Sem usuario %s\n", name);
-            else{
-                printf("Você não digitou um login anteriormente\n");
-                exit(0);
-            }
-        } 
-        
+            sprintf(buf ,"R %s %s",argv[1],argv[4]); 
+        }else{ 
+            sprintf(buf ,"R %s %s",argv[1],getlogin());
+        }        
 
         if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
             err("sendto()");
-        
-        // if (sendto(sockfd, argv[4], BUFLEN, 0, (struct sockaddr*)&serv_addr, slen)==-1)
-        //     err("sendto()");
-        //if (sendto(sockfd, name, namesize, 0, (struct sockaddr*)&serv_addr, slen)==-1)
-          //  err("sendto()");
     }
-    gethostname(dns, sizeof(dns));
-    printf("%s\n", dns);
- 
+
+
+    if(strcmp(argv[3], "deregister") == 0 ){
+        
+        if( argv[4] != NULL){
+            sprintf(buf ,"D %s %s",argv[1],argv[4]); 
+        }else{ 
+            sprintf(buf ,"D %s %s",argv[1],getlogin());
+        }        
+
+        if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
+            err("sendto()");
+    }  
+
+    if(strcmp(argv[3], "query") == 0 ){
+        
+        if( argv[4] != NULL){
+            sprintf(buf ,"L %s %s",argv[1],argv[4]); 
+        }else{ 
+            sprintf(buf ,"L %s %s",argv[1],getlogin());
+        }        
+
+        if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
+            err("sendto()");
+
+        if ( recvfrom(sockfd, buf2, BUFLEN, 0, (struct sockaddr*)&serv_addr, &slen) == -1) err("recvfrom()");
+            printf("%s\n", buf2);
+
+
+    } 
     close(sockfd);
     return 0;
 
