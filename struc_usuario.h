@@ -21,7 +21,7 @@ typedef struct Tipo_Lista{
 Tipo_Lista *Lista_Vazia();
 
 //Função para inserir um elemento na lista.
-void Insere_Lista(Tipo_Lista *L, char *user , char *dns , char *ip);
+void Insere_Lista(Tipo_Lista *L,char *ip ,  char *dns ,  char *user);
 
 //Função que retorna um elemento da lista, caso ele exista.
 struct Tipo_Elemento *Busca_Elemento(Tipo_Lista *L, char *alvo);

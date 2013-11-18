@@ -9,13 +9,13 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netdb.h>   
 #include <unistd.h>
 #include <stdlib.h> 
 #include <string.h>
 #include "struc_usuario.h"
 #include "utils.c"
 #define BUFLEN 512 
- 
 void err(char *str)
 {
     perror(str);
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
         if( buf[0] == 'R' ){
             
-            printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
+            // printf("Received packet from %s:%d\nData: %s\n\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
             char *dados[5];
             char *result = NULL;
             int count = 0;
@@ -69,19 +69,18 @@ int main(int argc, char **argv)
                 count++;
             }
 
+            // printf("%s\n%s\n", dados[1] , dados[2]);
             aux = Busca_Elemento( usuariosAtivos , dados[3] );
-            printf("##########%s\n", dados[3]);
             if( aux == NULL){ 
-                Insere_Lista(usuariosAtivos , inet_ntoa(cli_addr.sin_addr) , dados[2] , dados[3]);
+                Insere_Lista(usuariosAtivos , dados[1] , dados[2] , dados[3]);
 
-            }else{ 
-
-                insereValores(aux , inet_ntoa(cli_addr.sin_addr) , dados[2] );
-                printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );
+            }else{  
+                insereValores(aux , dados[1] , dados[2] );
+                // printf("%d %s %s\n", aux->idCount ,aux->dns[ aux->idCount ],aux->ip[ aux->idCount ] );    
+                                
             }
 
-            Imprime_Lista(usuariosAtivos);
-
+            Imprime_Lista(usuariosAtivos); 
         }else if( buf[0] == 'D' ){
 
         }else if( buf[0] == 'L' ){
@@ -98,10 +97,19 @@ int main(int argc, char **argv)
             aux = Busca_Elemento(usuariosAtivos , dados[3] );          
             if(aux == NULL){
                 printf("Usuario nao tem registro de log\n");
-                if (sendto(sockfd, "Usuario sem registro de log", BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1)
+                if (sendto(sockfd, "ERRO", BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1)
                 err("sendto()");
+                continue;
+
             } 
             else if (sendto(sockfd, aux->ip[aux->idCount], BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
+                err("sendto()");
+            else if (sendto(sockfd, aux->dns[aux->idCount], BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
+                err("sendto()");
+            char dig = (char)(((int)'0')+aux->idCount);
+            //printf("%s\n", dig);
+
+            if (sendto(sockfd, &dig, BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
                 err("sendto()");
             //if ( sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
                 //err("sendto()");
