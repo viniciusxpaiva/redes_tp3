@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 
             Imprime_Lista(usuariosAtivos); 
 
-        }else if( buf[0] == 'L' ){
+        }else if( buf[0] == 'P' ){
             char *dados[5];
             char *result = NULL;
             int count = 0;
@@ -122,9 +122,12 @@ int main(int argc, char **argv)
                 err("sendto()");
             else if (sendto(sockfd, aux->dns[aux->idCount], BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
                 err("sendto()");
-            char dig = (char)(((int)'0')+aux->idCount);
-            if (sendto(sockfd, &dig, BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
-                err("sendto()");  
+        
+            //char *dig = (char*)(((int)'0')+aux->idCount);
+            char dig[BUFLEN];
+            sprintf(dig, "%d", aux->idCount);
+            if (sendto(sockfd, dig, BUFLEN, 0, (struct sockaddr*)&cli_addr, slen) == -1 )
+                err("sendto()");
         }
 
     }

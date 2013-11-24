@@ -102,9 +102,9 @@ int main(int argc, char** argv)
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV]; 
         if ( getnameinfo((struct sockaddr*)&my, sizeof(my) , hbuf, sizeof(hbuf), sbuf,sizeof(sbuf),0) == 0){
             if( argv[4] != NULL)
-                sprintf(buf ,"L %s %s %s", inet_ntoa(my.sin_addr) ,hbuf,argv[4]); 
+                sprintf(buf ,"P %s %s %s", inet_ntoa(my.sin_addr) ,hbuf,argv[4]); 
             else
-                sprintf(buf ,"L %s %s %s", inet_ntoa(my.sin_addr) ,hbuf,getlogin());
+                sprintf(buf ,"P %s %s %s", inet_ntoa(my.sin_addr) ,hbuf,getlogin());
         } 
 
         if (sendto(sockfd, buf, BUFLEN, 0, (struct sockaddr*)&serv_addr, slen) == -1 )
